@@ -3,7 +3,10 @@ package com.app.service;
 import com.app.dto.UserDTO;
 import com.app.entities.Role;
 import com.app.entities.User;
+<<<<<<< HEAD
 import com.app.exception.ApiException;
+=======
+>>>>>>> 3960ae5a826b520eb895a48bfb31a818de2799f5
 import com.app.repository.UserRepository;
 
 import java.util.ArrayList;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+<<<<<<< HEAD
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
@@ -95,4 +99,58 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User savedManager = userRepository.save(user);
         return modelMapper.map(savedManager, UserDTO.class);
     }
+=======
+	private final UserRepository userRepository;
+	private final ModelMapper modelMapper;
+	private final PasswordEncoder passwordEncoder;
+
+	@Autowired
+	public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
+		this.modelMapper = modelMapper;
+		this.passwordEncoder = passwordEncoder;
+	}
+
+	@Override
+	public UserDTO registerUser(UserDTO userDTO) {
+		User user = modelMapper.map(userDTO, User.class);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		User savedUser = userRepository.save(user);
+		return modelMapper.map(savedUser, UserDTO.class);
+	}
+
+	@Override
+	public UserDTO getUserByUsername(String username) {
+		User user = userRepository.findByUsername(username);
+		return user != null ? modelMapper.map(user, UserDTO.class) : null;
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findByUsername(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+				new ArrayList<>());
+	}
+
+	@Override
+	public UserDTO registerAdmin(UserDTO userDto) {
+		User user = modelMapper.map(userDto, User.class);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRole(Role.ADMIN);
+		User savedAdmin = userRepository.save(user);
+		return modelMapper.map(savedAdmin, UserDTO.class);
+	}
+
+	@Override
+	public UserDTO registerManager(UserDTO userDto) {
+		User user = modelMapper.map(userDto, User.class);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setRole(Role.MANAGER);
+		User savedManager = userRepository.save(user);
+		return modelMapper.map(savedManager, UserDTO.class);
+	}
+>>>>>>> 3960ae5a826b520eb895a48bfb31a818de2799f5
 }
