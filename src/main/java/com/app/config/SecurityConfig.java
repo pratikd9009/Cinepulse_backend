@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     "/api/users/login",
                     "/api/users/register",
                     "/api/**"
-                ).permitAll()
+                ).permitAll().antMatchers("/api/movies/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             .and()
             .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);

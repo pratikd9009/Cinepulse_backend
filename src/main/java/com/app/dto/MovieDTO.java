@@ -1,6 +1,7 @@
 package com.app.dto;
 
-import java.util.Set;
+import com.app.entities.Certificate;
+import com.app.entities.MovieType;
 
 public class MovieDTO {
     private Long movieId;
@@ -9,27 +10,18 @@ public class MovieDTO {
     private int rating;
     private String language;
     private String format;
-    private Set<Long> showIds; // List of Show IDs related to the Movie
-    private Set<Long> ratingIds; // List of Rating IDs related to the Movie
+    private Certificate certificate;
+    private MovieType type;
 
-    // Default constructor
-    public MovieDTO() {
-    }
-
-    // Parameterized constructor
-    public MovieDTO(Long movieId, String name, String description, int rating, String language, String format,
-            Set<Long> showIds, Set<Long> ratingIds) {
-        this.movieId = movieId;
-        this.name = name;
-        this.description = description;
-        this.rating = rating;
-        this.language = language;
-        this.format = format;
-        this.showIds = showIds;
-        this.ratingIds = ratingIds;
-    }
+//    private byte[] image;
+//    private byte[] backgroundImage;
+    
+    @JsonSerialize(using = ByteArraySerializer.class)
+    @JsonDeserialize(using = ByteArrayDeserializer.class)
+    private byte[] image; // Store as byte array
 
     // Getters and Setters
+
     public Long getMovieId() {
         return movieId;
     }
@@ -78,25 +70,35 @@ public class MovieDTO {
         this.format = format;
     }
 
-    public Set<Long> getShowIds() {
-        return showIds;
+    public Certificate getCertificate() {
+        return certificate;
     }
 
-    public void setShowIds(Set<Long> showIds) {
-        this.showIds = showIds;
+    public void setCertificate(Certificate certificate) {
+        this.certificate = certificate;
     }
 
-    public Set<Long> getRatingIds() {
-        return ratingIds;
+    public MovieType getType() {
+        return type;
     }
 
-    public void setRatingIds(Set<Long> ratingIds) {
-        this.ratingIds = ratingIds;
+    public void setType(MovieType type) {
+        this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "MovieDTO [movieId=" + movieId + ", name=" + name + ", description=" + description + ", rating=" + rating
-                + ", language=" + language + ", format=" + format + ", showIds=" + showIds + ", ratingIds=" + ratingIds + "]";
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public byte[] getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public void setBackgroundImage(byte[] backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 }
