@@ -5,6 +5,6 @@ import com.app.dto.UserDTO;
 public interface UserService {
     UserDTO registerUser(UserDTO userDto);
     UserDTO getUserByUsername(String username);
-    UserDTO registerAdmin(UserDTO userDto);
-	UserDTO registerManager(UserDTO userDTO);
+	UserDTO registerManager(UserDTO userDto);
+	UserDTO registerAdmin(UserDTO userDto);
 }

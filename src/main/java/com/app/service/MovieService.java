@@ -1,13 +1,13 @@
 package com.app.service;
 
-import com.app.dto.MovieDTO;
-
 import java.util.List;
 
+import com.app.dto.MovieDTO;
+
 public interface MovieService {
-    MovieDTO addMovie(MovieDTO movieDTO);
-    MovieDTO updateMovie(Long id, MovieDTO movieDTO);
-    void deleteMovie(Long id);
-    MovieDTO getMovieById(Long id);
-    List<MovieDTO> getAllMovies();
+	MovieDTO addMovie(MovieDTO movirDTO);
+	void deleteMovie(Long id);
+	MovieDTO updateMovie(Long movieId ,MovieDTO movirDTO);
+	List<MovieDTO> getAllMovoie();
+	List<MovieDTO> getMovieByName(String movieName);
 }

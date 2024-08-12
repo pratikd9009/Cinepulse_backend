@@ -1,29 +1,44 @@
 package com.app.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Rating {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long ratingId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long ratingId;
 
-	private int rating;
+    @Min(value = 1, message = "Rating must be at least 1")
+    @Max(value = 5, message = "Rating must be at most 5")
+    @Column(nullable = false)
+    private int rating;
 
-	private String review;
+    @Size(max = 500, message = "Review cannot be longer than 500 characters")
+    @Column(length = 500) // Specify length for review column in database
+    private String review;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "movie_id", nullable = false)
-	private Movie movie;
+//    @ManyToOne
+//    @JoinColumn(name = "movie_id", nullable = false)
+//    private Movie movie;
+    @ManyToOne
+    @JoinColumn(name = "movie_id", referencedColumnName = "id", nullable = false)
+    private Movie movie;
+
+
+
 
 	public Rating() {
 		super();

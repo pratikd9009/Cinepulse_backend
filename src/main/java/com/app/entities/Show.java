@@ -23,9 +23,6 @@ public class Show {
 	
 	private int availableSeats;
 
-	@ManyToOne
-	@JoinColumn(name = "movie_id", nullable = false)
-	private Movie movie;
 
 	@ManyToOne
 	@JoinColumn(name = "cinema_hall_id", nullable = false)
@@ -38,12 +35,11 @@ public class Show {
 		super();
 	}
 
-	public Show(LocalDateTime showTime, int availableSeats, Movie movie, CinemaHall cinemaHall,
+	public Show(LocalDateTime showTime, int availableSeats, CinemaHall cinemaHall,
 			Set<Booking> bookings) {
 		super();
 		this.showTime = showTime;
 		this.availableSeats = availableSeats;
-		this.movie = movie;
 		this.cinemaHall = cinemaHall;
 		this.bookings = bookings;
 	}
@@ -72,13 +68,7 @@ public class Show {
 		this.availableSeats = availableSeats;
 	}
 
-	public Movie getMovie() {
-		return movie;
-	}
 
-	public void setMovie(Movie movie) {
-		this.movie = movie;
-	}
 
 	public CinemaHall getCinemaHall() {
 		return cinemaHall;
@@ -99,7 +89,7 @@ public class Show {
 	@Override
 	public String toString() {
 		return "Show [showId=" + showId + ", showTime=" + showTime + ", availableSeats=" + availableSeats + ", movie="
-				+ movie + ", cinemaHall=" + cinemaHall + ", bookings=" + bookings + "]";
+				+   ", cinemaHall=" + cinemaHall + ", bookings=" + bookings + "]";
 	}
 
 	
