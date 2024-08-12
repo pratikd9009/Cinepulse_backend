@@ -43,4 +43,8 @@ public class ApiResponse {
     public void setErrors(Map<String, String> errors) {
         this.errors = errors;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b854fc5e188cba5df25932dc753a0015f9a67bb7

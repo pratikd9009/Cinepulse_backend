@@ -48,4 +48,8 @@ public class GlobalExceptionHandler {
         e.printStackTrace();  // Consider using a logging framework instead
         return new ApiResponse("An unexpected error occurred");
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> b854fc5e188cba5df25932dc753a0015f9a67bb7
