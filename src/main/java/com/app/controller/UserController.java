@@ -2,10 +2,10 @@ package com.app.controller;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.bind.annotation.XmlRootElement;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.dto.UserDTO;
-import com.app.entities.Role;
+import com.app.exception.ResourceNotFoundException;
 import com.app.security.JwtTokenProvider;
 import com.app.service.UserService;
 
@@ -27,111 +27,115 @@ import com.app.service.UserService;
 @RequestMapping("/api/users")
 public class UserController {
 
-	private final UserService userService;
-	private final AuthenticationManager authenticationManager;
-	private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-	@Autowired
-	public UserController(UserService userService, AuthenticationManager authenticationManager,
-			JwtTokenProvider jwtTokenProvider) {
-		this.userService = userService;
-		this.authenticationManager = authenticationManager;
-		this.jwtTokenProvider = jwtTokenProvider;
-	}
+    @Autowired
+    public UserController(UserService userService,
+                          AuthenticationManager authenticationManager,
+                          JwtTokenProvider jwtTokenProvider) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
-	@PostMapping("/register")
-	public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO userDTO) {
-		UserDTO registeredUser = userService.registerUser(userDTO);
-		return ResponseEntity.ok(registeredUser);
-	}
+    @PostMapping("/register")
+    public ResponseEntity<UserDTO> registerUser(@Valid @RequestBody UserDTO userDTO) {
+        UserDTO registeredUser = userService.registerUser(userDTO);
+        return ResponseEntity.ok(registeredUser);
+    }
 
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestParam String username, @RequestParam String password) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+            );
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Invalid username or password");
+        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-	@PostMapping("/login")
-	public ResponseEntity<Map<String, Object>> login(@RequestParam String username, @RequestParam String password) {
-		try {
-			// Authenticate the user
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDTO userDTO = userService.getUserByUsername(userDetails.getUsername());
 
-			// Generate JWT token
-			String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
+        if (userDTO == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
 
-			// Fetch user details
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-			UserDTO userDTO = userService.getUserByUsername(userDetails.getUsername());
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", userDTO);
 
-			// Prepare the response
-			Map<String, Object> response = new HashMap<>();
-			response.put("token", token);
-			response.put("user", userDTO);
+        return ResponseEntity.ok(response);
+    }
 
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-		}
-	}
+    @PostMapping("/admin/registration")
+    public ResponseEntity<UserDTO> registerAdmin(@Valid @RequestBody UserDTO userDTO) {
+        UserDTO registerAdmin = userService.registerAdmin(userDTO);
+        return ResponseEntity.ok(registerAdmin);
+    }
 
-	@PostMapping("/admin/registration")
-	public ResponseEntity<UserDTO> registerAdmin(@RequestBody UserDTO userDTO) {
+    @PostMapping("/admin/login")
+    public ResponseEntity<Map<String, Object>> adminLogin(@RequestParam String userName, @RequestParam String password) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userName, password)
+            );
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Invalid username or password");
+        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		UserDTO registerAdmin = userService.registerAdmin(userDTO);
-		return ResponseEntity.ok(registerAdmin);
+        String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
+        UserDetails adminDetails = (UserDetails) authentication.getPrincipal();
+        UserDTO userDTO = userService.getUserByUsername(adminDetails.getUsername());
 
-	}
+        if (userDTO == null) {
+            throw new ResourceNotFoundException("Admin not found");
+        }
 
-	@PostMapping("/admin/login")
-	public ResponseEntity<Map<String, Object>> adminLogin(@RequestParam String userName, @RequestParam String password) {
-		try {
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", userDTO);
 
-			String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
+        return ResponseEntity.ok(response);
+    }
 
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    @PostMapping("/manager/registration")
+    public ResponseEntity<UserDTO> registerManager(@Valid @RequestBody UserDTO userDTO) {
+        UserDTO registerManager = userService.registerManager(userDTO);
+        return ResponseEntity.ok(registerManager);
+    }
 
-			UserDTO userDTO = userService.getUserByUsername(userDetails.getUsername());
+    @PostMapping("/manager/login")
+    public ResponseEntity<Map<String, Object>> managerLogin(@RequestParam String userName, @RequestParam String password) {
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(userName, password)
+            );
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Invalid username or password");
+        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			Map<String, Object> response = new HashMap<>();
-			response.put("token", token);
-			response.put("user", userDTO);
+        String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
+        UserDetails managerDetails = (UserDetails) authentication.getPrincipal();
+        UserDTO userDTO = userService.getUserByUsername(managerDetails.getUsername());
 
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (userDTO == null) {
+            throw new ResourceNotFoundException("Manager not found");
+        }
 
-		}
-	}
-	
-	@PostMapping("/manager/registration")
-	public ResponseEntity<UserDTO> registerManager(@RequestBody UserDTO userDTO) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", userDTO);
 
-		UserDTO registerManager = userService.registerManager(userDTO);
-		return ResponseEntity.ok(registerManager);
-	}
-	
-	@PostMapping("/manager/login")
-	public ResponseEntity<Map<String,Object>> managerLogin(@RequestParam String userName,@RequestParam String password){
-		try {
-			Authentication authentication = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(userName, password));
-			SecurityContextHolder.getContext().setAuthentication(authentication);
-
-			String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
-
-			UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-			UserDTO userDTO = userService.getUserByUsername(userDetails.getUsername());
-
-			Map<String, Object> response = new HashMap<>();
-			response.put("token", token);
-			response.put("user", userDTO);
-
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-
-		}
-	}
+        return ResponseEntity.ok(response);
+    }
 }

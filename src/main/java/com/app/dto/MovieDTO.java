@@ -1,104 +1,142 @@
 package com.app.dto;
 
+import java.time.LocalDate;
+import java.util.Set;
+
 import com.app.entities.Certificate;
-import com.app.entities.MovieType;
+import com.app.entities.Formats;
+import com.app.entities.Genres;
+import com.app.entities.Languages;
+import com.app.entities.Type;
 
 public class MovieDTO {
-    private Long movieId;
-    private String name;
-    private String description;
-    private int rating;
-    private String language;
-    private String format;
-    private Certificate certificate;
-    private MovieType type;
+	private Long movieId;
+	private String name; 
+	private String thumbnail;
+	private String backgroundImage;
+	private String description;
+	private LocalDate releaseDate;
+	private Formats formats;
+	private Languages languages;
+	private Genres genres;
+	private Certificate certificate;
+	private Type type;
+	private Double rating;
 
-//    private byte[] image;
-//    private byte[] backgroundImage;
-    
-    @JsonSerialize(using = ByteArraySerializer.class)
-    @JsonDeserialize(using = ByteArrayDeserializer.class)
-    private byte[] image; // Store as byte array
+	public MovieDTO() {
+	}
 
-    // Getters and Setters
+	public MovieDTO(String name, String thumbnail, String backgroundImage, String description,
+			LocalDate releaseDate, Formats formats, Languages languages, Genres genres,
+			Certificate certificate, Type type) {
+		this.name = name;
+		this.thumbnail = thumbnail;
+		this.backgroundImage = backgroundImage;
+		this.description = description;
+		this.releaseDate = releaseDate;
+		this.formats = formats;
+		this.languages = languages;
+		this.genres = genres;
+		this.certificate = certificate;
+		this.type = type;
+	}
 
-    public Long getMovieId() {
-        return movieId;
-    }
+	public Long getMovieId() {
+		return movieId;
+	}
 
-    public void setMovieId(Long movieId) {
-        this.movieId = movieId;
-    }
+	public void setMovieId(Long movieId) {
+		this.movieId = movieId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getThumbnail() {
+		return thumbnail;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setThumbnail(String string) {
+		this.thumbnail = string;
+	}
 
-    public int getRating() {
-        return rating;
-    }
+	public String getBackgroundImage() {
+		return backgroundImage;
+	}
 
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
+	public void setBackgroundImage(String string) {
+		this.backgroundImage = string;
+	}
 
-    public String getLanguage() {
-        return language;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public String getFormat() {
-        return format;
-    }
+	public LocalDate getReleaseDate() {
+		return releaseDate;
+	}
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
+	public void setReleaseDate(LocalDate releaseDate) {
+		this.releaseDate = releaseDate;
+	}
 
-    public Certificate getCertificate() {
-        return certificate;
-    }
+	public Formats getFormats() {
+		return formats;
+	}
 
-    public void setCertificate(Certificate certificate) {
-        this.certificate = certificate;
-    }
+	public void setFormats(Formats formats) {
+		this.formats = formats;
+	}
 
-    public MovieType getType() {
-        return type;
-    }
+	public Languages getLanguages() {
+		return languages;
+	}
 
-    public void setType(MovieType type) {
-        this.type = type;
-    }
+	public void setLanguages(Languages languages) {
+		this.languages = languages;
+	}
 
-    public byte[] getImage() {
-        return image;
-    }
+	public Genres getGenres() {
+		return genres;
+	}
 
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
+	public void setGenres(Genres genres) {
+		this.genres = genres;
+	}
 
-    public byte[] getBackgroundImage() {
-        return backgroundImage;
-    }
+	public Certificate getCertificate() {
+		return certificate;
+	}
 
-    public void setBackgroundImage(byte[] backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
+	public void setCertificate(Certificate certificate) {
+		this.certificate = certificate;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
+	}
+
+	
+
 }

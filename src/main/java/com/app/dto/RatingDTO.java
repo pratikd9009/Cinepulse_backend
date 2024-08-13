@@ -2,17 +2,17 @@ package com.app.dto;
 
 public class RatingDTO {
     private Long ratingId;
-    private int rating;
+    private Integer rating; // Use Integer to allow null values
     private String review;
-    private Long userId; // To reference the User entity
-    private Long movieId; // To reference the Movie entity
+    private Long userId; // Use Long for optional references
+    private Long movieId;
 
     // Default constructor
     public RatingDTO() {
     }
 
     // Parameterized constructor
-    public RatingDTO(Long ratingId, int rating, String review, Long userId, Long movieId) {
+    public RatingDTO(Long ratingId, Integer rating, String review, Long userId, Long movieId) {
         this.ratingId = ratingId;
         this.rating = rating;
         this.review = review;
@@ -20,7 +20,13 @@ public class RatingDTO {
         this.movieId = movieId;
     }
 
-    // Getters and Setters
+    public RatingDTO(Long ratingId2, int rating2, String review2) {
+		this.ratingId=ratingId2;
+		this.rating=rating2;
+		this.review=review2;
+	}
+
+	// Getters and Setters
     public Long getRatingId() {
         return ratingId;
     }
@@ -29,11 +35,11 @@ public class RatingDTO {
         this.ratingId = ratingId;
     }
 
-    public int getRating() {
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 

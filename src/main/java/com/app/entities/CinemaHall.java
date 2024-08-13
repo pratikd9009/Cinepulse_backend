@@ -2,11 +2,18 @@ package com.app.entities;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 
 @Entity
 public class CinemaHall {
@@ -18,8 +25,13 @@ public class CinemaHall {
 
 	private String location;
 
-	@OneToMany(mappedBy = "cinemaHall")
+	@OneToMany(mappedBy = "cinemaHall" ,cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private Set<Show> shows;
+
+	@ManyToOne()
+	@JoinColumn(name = "movie_id", nullable = true)
+	@JsonBackReference
+	private Movie movie;
 
 	public CinemaHall() {
 		super();
@@ -64,10 +76,21 @@ public class CinemaHall {
 		this.shows = shows;
 	}
 
+	
+	public Movie getMovie() {
+		return movie;
+	}
+
+	public void setMovie(Movie movie) {
+		this.movie = movie;
+	}
+
 	@Override
 	public String toString() {
 		return "CinemaHall [cinemaHallId=" + cinemaHallId + ", name=" + name + ", location=" + location + ", shows="
-				+ shows + "]";
+				+ shows + ", movie=" + movie + "]";
 	}
+	
+	
 
 }
